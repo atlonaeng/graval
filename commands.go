@@ -520,12 +520,23 @@ func (cmd commandPass) Async() bool {
 }
 
 func (cmd commandPass) Execute(conn *ftpConn, param string) {
-	if conn.driver.Authenticate(conn.reqUser, param) {
+	errorCode := 530
+	errorMessage := "Incorrect password, not logged in"
+
+	var ok bool
+
+	if driver, hasCustomAuth := conn.driver.(FTPDriverCustomAuthenticate); hasCustomAuth {
+		errorCode, errorMessage, ok = driver.CustomAuthenticate(conn.reqUser, param)
+	} else {
+		ok = conn.driver.Authenticate(conn.reqUser, param)
+	}
+
+	if ok {
 		conn.user = conn.reqUser
 		conn.reqUser = ""
 		conn.writeMessage(230, "Password ok, continue")
 	} else {
-		conn.writeMessage(530, "Incorrect password, not logged in")
+		conn.writeMessage(errorCode, errorMessage)
 		conn.writeMessage(221, "Goodbye.")
 		conn.Close()
 	}

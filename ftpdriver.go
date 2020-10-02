@@ -71,3 +71,8 @@ type FTPDriver interface {
 type FTPDriverSetRemoteAddress interface {
 	SetRemoteAddress(remoteAddress net.Addr)
 }
+
+// FTPDriverAuthenticateWithError is an optional interface customized auth
+type FTPDriverCustomAuthenticate interface {
+	CustomAuthenticate(username string, password string) (code int, message string, ok bool)
+}
