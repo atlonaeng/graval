@@ -70,10 +70,14 @@ var _ = Describe("Graval", func() {
 
 	tlsConfig := &tls.Config{
 		Certificates: []tls.Certificate{*cert},
+		MinVersion:   tls.VersionTLS11,
+		MaxVersion:   tls.VersionTLS11,
 	}
 
 	tlsClientConfig := &tls.Config{
 		InsecureSkipVerify: true,
+		MinVersion:         tls.VersionTLS11,
+		MaxVersion:         tls.VersionTLS11,
 	}
 
 	variants := []*testVariant{
@@ -135,7 +139,7 @@ var _ = Describe("Graval", func() {
 		Describe(variant.name, func() {
 			cmd := func(format string, args ...interface{}) {
 				_, err := c.Cmd(format, args...)
-				Expect(err).NotTo(HaveOccurred())
+				ExpectWithOffset(3, err).NotTo(HaveOccurred())
 			}
 
 			getres := func(format string, args ...interface{}) func(int) (string, error) {
@@ -143,7 +147,7 @@ var _ = Describe("Graval", func() {
 					cmd(format, args...)
 
 					_, lineRes, err := c.ReadResponse(code)
-					Expect(err).NotTo(HaveOccurred())
+					ExpectWithOffset(2, err).NotTo(HaveOccurred())
 
 					return lineRes, err
 				}
@@ -157,19 +161,19 @@ var _ = Describe("Graval", func() {
 						return
 					}
 
-					Expect(lineRes).To(Equal(line))
+					ExpectWithOffset(1, lineRes).To(Equal(line))
 				}
 			}
 
 			resonly := func(code int, line string) {
 				_, lineRes, err := c.ReadResponse(code)
-				Expect(err).NotTo(HaveOccurred())
+				ExpectWithOffset(1, err).NotTo(HaveOccurred())
 
 				if err != nil {
 					return
 				}
 
-				Expect(lineRes).To(Equal(line))
+				ExpectWithOffset(1, lineRes).To(Equal(line))
 			}
 
 			login := func() {
@@ -1202,7 +1206,7 @@ var _ = Describe("Graval", func() {
 
 						c.Cmd("NOOP")
 						_, _, err := c.ReadResponse(0)
-						Expect(err).To(Equal(io.EOF))
+						Expect(err).To(HaveOccurred())
 					})
 				})
 
@@ -1326,7 +1330,7 @@ var _ = Describe("Graval", func() {
 
 					It("RNTO renamed", func() {
 						login()
-						res("RNTO renamed")(550, "Action not taken")
+						res("RNTO renamed")(503, "Bad sequence of commands: use RNFR first.")
 					})
 
 					It("RNFR file RNTO renamed", func() {
