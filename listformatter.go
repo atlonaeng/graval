@@ -2,10 +2,11 @@ package graval
 
 import (
 	"bytes"
-	"github.com/jehiah/go-strftime"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/jehiah/go-strftime"
 )
 
 type listFormatter struct {

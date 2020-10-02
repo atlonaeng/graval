@@ -2,7 +2,6 @@ package memory
 
 import (
 	"bytes"
-	"github.com/koofr/graval"
 	"io"
 	"io/ioutil"
 	"os"
@@ -10,6 +9,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/koofr/graval"
 )
 
 type MemoryDriver struct {

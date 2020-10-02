@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"github.com/koofr/graval"
 	"github.com/koofr/graval/memory"
-	"log"
 )
 
 func main() {

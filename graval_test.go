@@ -5,12 +5,6 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"github.com/jehiah/go-strftime"
-	"github.com/koofr/go-netutils"
-	. "github.com/koofr/graval"
-	"github.com/koofr/graval/memory"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 	"io"
 	"io/ioutil"
 	"net"
@@ -20,6 +14,14 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/jehiah/go-strftime"
+	"github.com/koofr/go-netutils"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+
+	. "github.com/koofr/graval"
+	"github.com/koofr/graval/memory"
 )
 
 func generateCert() (cert *tls.Certificate, err error) {
